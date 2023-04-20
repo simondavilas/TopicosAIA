@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mlops-puj
+  name: train-model-deployment
+spec:
+  selector:
+    matchLabels:
+      app: train-model-app
+      env: mlops-puj
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: train-model-app
+        env: mlops-puj
+    spec:
+      containers:
+        - image: mlops/project2-train-model:1.0.0
+          name: train-model
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "MODEL_PATH"
+              value: "/opt/topicsIA/model/"
+            - name: "USER_DB"
+              value: "root"
+            - name: "PASS_DB"
+              value: "topicosIA"
+            - name: "IP_SERVER"
+              value: "mlops-puj-x-db-service"
+            - name: "NAME_DB"
+              value: "training"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 800Mi
+          volumeMounts:
+            - mountPath: /opt/topicsIA/model
+              name: mlops-m-pv-storage
+      volumes:
+        - name:  mlops-m-pv-storage
+          persistentVolumeClaim:
+            claimName: mlops-m-pv-claim

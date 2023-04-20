@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mlops-puj
+  name: process-data-deployment
+spec:
+  selector:
+    matchLabels:
+      app: process-data-app
+      env: mlops-puj
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: process-data-app
+        env: mlops-puj
+    spec:
+      containers:
+        - image: mlops/project2-process-data:1.0.0
+          name: process-data
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "DATASET_PATH"
+              value: "/opt/topicsIA/dataset"
+            - name: "DATASET_CSV"
+              value: "/opt/topicsIA/dataset/covertype.train.csv"
+            - name: "USER_DB"
+              value: "root"
+            - name: "PASS_DB"
+              value: "topicosIA"
+            - name: "IP_SERVER"
+              value: "mlops-puj-x-db-service"
+            - name: "NAME_DB"
+              value: "training"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 800Mi
+          volumeMounts:
+            - mountPath: /opt/topicsIA/dataset
+              name: mlops-f-pv-storage
+      volumes:
+        - name:  mlops-f-pv-storage
+          persistentVolumeClaim:
+            claimName: mlops-f-pv-claim

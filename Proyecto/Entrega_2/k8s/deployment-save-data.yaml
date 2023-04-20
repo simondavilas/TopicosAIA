@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mlops-puj
+  name: save-data-deployment
+spec:
+  selector:
+    matchLabels:
+      app: save-data-app
+      env: mlops-puj
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: save-data-app
+        env: mlops-puj
+    spec:
+      containers:
+        - image: mlops/project2-save-data:1.0.0
+          name: save-data
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "DATASET_PATH"
+              value: "/opt/topicsIA/dataset"
+            - name: "USER_DB"
+              value: "root"
+            - name: "PASS_DB"
+              value: "topicosIA"
+            - name: "IP_SERVER"
+              value: "mlops-puj-z-db-service"
+            - name: "NAME_DB"
+              value: "inference"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 800Mi
+          volumeMounts:
+            - mountPath: /opt/topicsIA/dataset
+              name: mlops-f-pv-storage
+      volumes:
+        - name:  mlops-f-pv-storage
+          persistentVolumeClaim:
+            claimName: mlops-f-pv-claim

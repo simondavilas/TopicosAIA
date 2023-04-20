@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-z-deployment
+  namespace: mlops-puj
+  labels:
+    app: database-z
+    env: mlops-puj
+spec:
+  selector:
+    matchLabels:
+      app: database-z
+      env: mlops-puj
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: database-z
+        env: mlops-puj
+    spec:
+      containers:
+      - name: db-z
+        image: mysql:8.0
+        env:
+        - name: MYSQL_DATABASE
+          value: "inference"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "topicosIA"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: mlops-m-pv-storage
+      volumes:
+        - name: mlops-m-pv-storage
+          persistentVolumeClaim:
+            claimName: mlops-m-pv-claim

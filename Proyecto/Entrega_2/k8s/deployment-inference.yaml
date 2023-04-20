@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mlops-puj
+  name: inference-deployment
+spec:
+  selector:
+    matchLabels:
+      app: inference-app
+      env: mlops-puj
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: inference-app
+        env: mlops-puj
+    spec:
+      containers:
+        - image: mlops/project2-train-model:1.0.0
+          name: inference
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "MODEL_PATH"
+              value: "/opt/topicsIA/dataset"
+            - name: "USER_DB"
+              value: "root"
+            - name: "PASS_DB"
+              value: "topicosIA"
+            - name: "IP_SERVER"
+              value: "mlops-puj-z-db-service"
+            - name: "NAME_DB"
+              value: "inference"
+          resources:
+            limits:
+              cpu: 300m
+              memory: 50Mi
+          volumeMounts:
+            - mountPath: /opt/topicsIA/model
+              name: mlops-m-pv-storage
+      volumes:
+        - name:  mlops-m-pv-storage
+          persistentVolumeClaim:
+            claimName: mlops-m-pv-claim

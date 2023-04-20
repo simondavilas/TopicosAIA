@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlops-puj-train-model-service
+  namespace: mlops-puj
+spec:
+  type: NodePort
+  ports:
+  - name: train-model-mlops
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: train-model-app
+    env: mlops-puj

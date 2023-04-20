@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %} Inference {% endblock %}
+
+{% block content %} 
+
+<div class="container">
+    <form>
+        <div class="mb-3 row">
+            <label for="inputElevation" class="col-4 col-form-label">Elevation</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputElevation" id="inputElevation" placeholder="Elevation">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputSlope" class="col-4 col-form-label">Slope</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputSlope" id="inputSlope" placeholder="Slope">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputHDTH" class="col-4 col-form-label">Horizontal Distance To Hydrology</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputHDTH" id="inputHDTH" placeholder="Horizontal Distance To Hydrology">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputVDTH" class="col-4 col-form-label">Vertical Distance To Hydrology</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputVDTH" id="inputVDTH" placeholder="Vertical Distance To Hydrology">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputHDTR" class="col-4 col-form-label">Horizontal Distance To Roadways</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputHDTR" id="inputHDTR" placeholder="Horizontal Distance To Roadways">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputH9" class="col-4 col-form-label">Hillshade 9am</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputH9" id="inputH9" placeholder="Hillshade 9am">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputHN" class="col-4 col-form-label">Hillshade Noon</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputHN" id="inputHN" placeholder="Hillshade Noon">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputHDTFP" class="col-4 col-form-label">Horizontal Distance To Fire Points</label>
+            <div class="col-8">
+                <input type="text" class="form-control" name="inputHDTFP" id="inputHDTFP" placeholder="Horizontal Distance To Fire Points">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <div class="offset-sm-4 col-sm-8">
+                <button type="submit" class="btn btn-success">Inferir</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
+    
