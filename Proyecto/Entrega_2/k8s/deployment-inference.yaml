@@ -16,7 +16,7 @@ spec:
         env: mlops-puj
     spec:
       containers:
-        - image: mlops/project2-train-model:1.0.0
+        - image: mlops/project2-inference:1.0.0
           name: inference
           ports:
             - containerPort: 8080
@@ -34,7 +34,7 @@ spec:
           resources:
             limits:
               cpu: 300m
-              memory: 50Mi
+              memory: 500Mi
           volumeMounts:
             - mountPath: /opt/topicsIA/model
               name: mlops-m-pv-storage

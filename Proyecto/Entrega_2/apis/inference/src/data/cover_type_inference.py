@@ -1,15 +1,4 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
 from pydantic import BaseModel
-
-import requests
-import os
-import numpy as np
-import pandas as pd
-from joblib import dump, load
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
-from sklearn import metrics
 
 
 class CoverType(BaseModel):

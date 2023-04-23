@@ -33,7 +33,7 @@ spec:
               value: "inference"
           resources:
             limits:
-              cpu: 1000m
+              cpu: 250m
               memory: 800Mi
           volumeMounts:
             - mountPath: /opt/topicsIA/dataset

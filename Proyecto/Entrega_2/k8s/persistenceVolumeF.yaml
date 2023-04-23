@@ -11,4 +11,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/estudiante/TopicosAIA/Talleres/k8s/volumes/f"
+    path: "/mnt/c/Users/DEIMER\ BALLESTEROS/Downloads/volumes/f"

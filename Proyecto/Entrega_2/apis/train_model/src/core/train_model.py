@@ -1,19 +1,19 @@
-import sqlalchemy as db
-import requests
+import glob
 import os
 import numpy as np
 import pandas as pd
-import pymysql
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
-from pydantic import BaseModel
-from sqlalchemy import create_engine, text
-from sqlalchemy.ext.declarative import declarative_base
-from joblib import dump, load
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+import sqlalchemy as db
+import commons.logs.logger as log
+import datetime
+from fastapi import HTTPException
+from joblib import dump
 from sklearn import metrics
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sqlalchemy import create_engine, text
 from configuration.env import NAME_DB, PASS_DB, IP_SERVER, USER_DB, MODEL_PATH
+
+logger = log.get_logger("train-model-component")
 
 
 def get_data(data):
@@ -22,7 +22,9 @@ def get_data(data):
         engine = create_engine(
             "mysql+pymysql://" + USER_DB + ":" + PASS_DB + "@" + IP_SERVER + "/" + NAME_DB)
         with engine.connect() as conn:
-            query = 'SELECT Elevation, Hillshade_9am, Hillshade_Noon, Horizontal_Distance_To_Fire_Points, Horizontal_Distance_To_Hydrology, Horizontal_Distance_To_Roadways, Slope, Soil_Type, Vertical_Distance_To_Hydrology, Wilderness_Area FROM ' + data
+            query = 'SELECT Elevation, Hillshade_9am, Hillshade_Noon, Horizontal_Distance_To_Fire_Points, ' \
+                    'Horizontal_Distance_To_Hydrology, Horizontal_Distance_To_Roadways, Slope, Soil_Type, ' \
+                    'Vertical_Distance_To_Hydrology, Wilderness_Area, Cover_Type FROM ' + data
             if db.inspect(conn).has_table('cover_type'):
                 df_db = pd.read_sql_query(sql=text(query), con=conn)
                 return df_db
@@ -33,6 +35,7 @@ def get_data(data):
 
 
 def versioning_model(full_path):
+    logger.info('iniciando versionamiento del modelo')
     version_full_path = None
     if os.path.isfile(full_path):
         csv_files = glob.glob(os.path.join(MODEL_PATH, "*model.joblib"))
@@ -43,25 +46,31 @@ def versioning_model(full_path):
             if version != "latest":
                 versions.append(int(version))
 
-        max_version = 0
         if len(versions) != 0:
             max_version = np.max(versions) + 1
+            version_full_path = MODEL_PATH + 'cover_type' + '_' + str(max_version) + '_model.joblib'
+            os.renames(full_path, version_full_path)
 
-        version_full_path = MODEL_PATH + 'cover_type' + '_' + max_version + '_model.joblib'
-        os.renames(full_path, version_full_path)
+    logger.info('finalizo exitosamente versionamieto del modelo. %s ultimo modelo, %s modelo versionado.',
+                full_path, version_full_path)
 
     return full_path, version_full_path
 
 
 def save_model(df):
-    engine = create_engine(
-        "mysql+pymysql://" + os.environ["USER_DB"] + ":" + os.environ["PASS_DB"] + "@" + os.environ["IP_SERVER"] + "/" +
-        os.environ["NAME_DB"])
-    with engine.connect() as conn:
-        df.to_sql(con=conn, index_label='id', name='model', if_exists='append')
+    logger.info('iniciando persistencia de versionamiento de modelo en DB')
+    try:
+        engine = create_engine(
+            "mysql+pymysql://" + USER_DB + ":" + PASS_DB + "@" + IP_SERVER + "/" + NAME_DB)
+        with engine.connect() as conn:
+            df.to_sql(con=conn, index_label='id', name='model', if_exists='append')
+    except Exception as error:
+        logger.error(error)
+        raise HTTPException(status_code=500, detail="Error persistiendo versionamiento del modelo en DB ")
 
 
 def train_model(data):
+    logger.info('Iniciando entrenamiento del modelo: %s', data)
     df = get_data(data)
     df = df.dropna()
     df['Wilderness_Area'].replace(['Cache', 'Commanche', 'Neota', 'Rawah'],
@@ -83,7 +92,10 @@ def train_model(data):
     model_metrics = metrics.classification_report(expected_y, predicted_y, output_dict=True, zero_division=1)
     model_full_path, version_full_path = versioning_model(MODEL_PATH + data + '_latest_model.joblib')
     dump(model, model_full_path)
-    data = [[model_full_path[19:], now()], [version_full_path[19:], now()]]
-    d_final = pd.DataFrame(data, columns=['model', 'update_date'])
-    save_model(d_final)
+
+    if version_full_path is not None:
+        data = [[model_full_path[19:], datetime.datetime.now()], [version_full_path[19:], datetime.datetime.now()]]
+        d_final = pd.DataFrame(data, columns=['model', 'update_date'])
+        save_model(d_final)
+
     return model_metrics
