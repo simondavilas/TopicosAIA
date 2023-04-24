@@ -5,53 +5,57 @@
 {% block content %} 
 
 <div class="container">
-    <form>
+    <form enctype="multipart/form-data" method="post" action="{% url 'inference'%}">
+        {% csrf_token %}
+        <div hidden >
+            {{ formulario }}
+        </div>
         <div class="mb-3 row">
             <label for="inputElevation" class="col-4 col-form-label">Elevation</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputElevation" id="inputElevation" placeholder="Elevation">
+            <div class="col-8 form-control">
+                {{formulario.elevation}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputSlope" class="col-4 col-form-label">Slope</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputSlope" id="inputSlope" placeholder="Slope">
+            <label for="inputElevation" class="col-4 col-form-label">Slope</label>
+            <div class="col-8 form-control">
+                {{formulario.slope}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputHDTH" class="col-4 col-form-label">Horizontal Distance To Hydrology</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputHDTH" id="inputHDTH" placeholder="Horizontal Distance To Hydrology">
+            <label for="inputElevation" class="col-4 col-form-label">horizontal_distance_to_hidrology</label>
+            <div class="col-8 form-control">
+                {{formulario.horizontal_distance_to_hidrology}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputVDTH" class="col-4 col-form-label">Vertical Distance To Hydrology</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputVDTH" id="inputVDTH" placeholder="Vertical Distance To Hydrology">
+            <label for="inputElevation" class="col-4 col-form-label">vertical_distance_to_hidrology</label>
+            <div class="col-8 form-control">
+                {{formulario.vertical_distance_to_hidrology}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputHDTR" class="col-4 col-form-label">Horizontal Distance To Roadways</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputHDTR" id="inputHDTR" placeholder="Horizontal Distance To Roadways">
+            <label for="inputElevation" class="col-4 col-form-label">horizontal_distance_to_roadways</label>
+            <div class="col-8 form-control">
+                {{formulario.horizontal_distance_to_roadways}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputH9" class="col-4 col-form-label">Hillshade 9am</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputH9" id="inputH9" placeholder="Hillshade 9am">
+            <label for="inputElevation" class="col-4 col-form-label">hillshade_9_am</label>
+            <div class="col-8 form-control">
+                {{formulario.hillshade_9_am}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputHN" class="col-4 col-form-label">Hillshade Noon</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputHN" id="inputHN" placeholder="Hillshade Noon">
+            <label for="inputElevation" class="col-4 col-form-label">hillshade_noon</label>
+            <div class="col-8 form-control">
+                {{formulario.hillshade_noon}}
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputHDTFP" class="col-4 col-form-label">Horizontal Distance To Fire Points</label>
-            <div class="col-8">
-                <input type="text" class="form-control" name="inputHDTFP" id="inputHDTFP" placeholder="Horizontal Distance To Fire Points">
+            <label for="inputElevation" class="col-4 col-form-label">horizontal_distance_to_firepoints</label>
+            <div class="col-8 form-control">
+                {{formulario.horizontal_distance_to_firepoints}}
             </div>
         </div>
         <div class="mb-3 row">

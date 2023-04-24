@@ -9,18 +9,16 @@
         <h1 class="display-3">Entrenamiento de modelo</h1>
         <hr class="my-2">
 
-        <div class="mb-3">
-            <label for="" class="form-label display-7">Modelos</label>
-            <select class="form-select form-select-lg" name="" id="">
-                <option selected>Selecciona uno</option>
-                <option value="">cover type</option>
+        <form enctype="multipart/form-data" method="post" action="{% url 'train' %}"> 
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ formulario }}<br><br>
+            </div>
 
-            </select>
-        </div>
-
-        <p class="lead">
-           <a class="btn btn-success" href="#" role="button">Entrenar</a>
-        </p>
+            <p class="lead">
+                <input type="submit" class="btn btn-success"  value="Entrenar" />
+            </p>
+        </form>
         
     </div>
 </div>
