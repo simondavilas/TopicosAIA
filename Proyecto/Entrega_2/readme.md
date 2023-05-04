@@ -38,6 +38,15 @@ docker image build -t mlops/project2-ui:1.0.0  .
 
 ```
 
+## Load Images for minikube
+```
+minikube image load mlops/project2-process-data:1.0.0
+minikube image load mlops/project2-train-model:1.0.0
+minikube image load mlops/project2-inference:1.0.0
+minikube image load mlops/project2-save-data:1.0.0
+minikube image load mlops/project2-ui:1.0.0 
+```
+
 ## Ejecutar/Crear Recursos K8s
 
 ```
