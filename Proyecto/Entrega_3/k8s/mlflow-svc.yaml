@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-svc
+  namespace: mlops-puj
+  labels:
+    app: mlflow
+    env: mlops-puj
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: mlflow
+    env: mlops-puj

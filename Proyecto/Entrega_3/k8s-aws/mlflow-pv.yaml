@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mlops-mlflow-pv-storage
+  namespace: mlops-puj
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mlops/artifacts
+    server: fs-036586b5c4567a771.efs.us-east-1.amazonaws.com
+  storageClassName: aws-efs
+  volumeMode: Filesystem          

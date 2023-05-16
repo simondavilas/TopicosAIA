@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pycaret-deployment
+  namespace: mlops-puj
+  labels:
+    app: pycaret
+    env: mlops-puj
+spec:
+  selector:
+    matchLabels:
+      app: pycaret
+      env: mlops-puj
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pycaret
+        env: mlops-puj
+    spec:
+      containers:
+      - name: pycaret-container
+        image: 296553184312.dkr.ecr.us-east-1.amazonaws.com/mlops-puj/pycaret-notebook:latest
+        ports:
+        - containerPort: 8888        
+        volumeMounts:
+        - mountPath: "/work"
+          name: data-mlflow-pv-storage
+      volumes:
+        - name: data-mlflow-pv-storage
+          persistentVolumeClaim:
+            claimName: data-mlflow-pv-claim
+      imagePullSecrets:
+        - name: secret-devops-registry            

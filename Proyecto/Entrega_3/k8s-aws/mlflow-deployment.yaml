@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-deployment
+  namespace: mlops-puj
+  labels:
+    app: mlflow
+    env: mlops-puj
+spec:
+  selector:
+    matchLabels:
+      app: mlflow
+      env: mlops-puj
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mlflow
+        env: mlops-puj
+    spec:
+      containers:
+      - name: mlflow-container
+        image: 296553184312.dkr.ecr.us-east-1.amazonaws.com/mlops-puj/mlflow
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MLFLOW_S3_ENDPOINT_URL
+          value: "http://minio-svc:9000"        
+        - name: DB_USERNAME
+          value: "topicosIA"
+        - name: DB_PASSWORD
+          value: "topicosIA"
+        - name: DB_URL
+          value: "metadata-db-mlfow-svc:5432"
+        - name: DB_NAME
+          value: "metadata-mlfow"    
+        - name: ARTIFACT_STORE
+          value: "s3://mlflows3/artifacts"      
+        - name: AWS_ACCESS_KEY_ID
+          value: "admin"     
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "supersecret"               
+        volumeMounts:
+        - mountPath: "/data"
+          name: metadata-mlflow-pv-storage
+      volumes:
+        - name: metadata-mlflow-pv-storage
+          persistentVolumeClaim:
+            claimName: metadata-mlflow-pv-claim
+      imagePullSecrets:
+        - name: secret-devops-registry
+      restartPolicy: Always        

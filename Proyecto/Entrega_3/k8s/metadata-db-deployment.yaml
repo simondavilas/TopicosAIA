@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metadata-db-mlfow
+  namespace: mlops-puj
+  labels:
+    app: metadata-db-mlfow
+    env: mlops-puj
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-db-mlfow
+      env: mlops-puj
+  template:
+    metadata:
+      labels:
+        app: metadata-db-mlfow
+        env: mlops-puj
+    spec:
+      containers:
+      - name: metadata-db-mlfow
+        image: postgres
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "metadata-mlfow"
+        - name: POSTGRES_USER
+          value: "topicosIA"
+        - name: POSTGRES_PASSWORD
+          value: "topicosIA"          
+        volumeMounts:
+        - mountPath: /var/lib/postgres/data
+          name: metadata-mlflow-pv-storage
+      volumes:
+        - name: metadata-mlflow-pv-storage
+          persistentVolumeClaim:
+            claimName: metadata-mlflow-pv-claim
