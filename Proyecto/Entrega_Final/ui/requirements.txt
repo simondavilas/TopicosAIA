@@ -1,0 +1,14 @@
+fastapi>=0.68.0,<0.69.0
+uvicorn>=0.15.0,<0.16.0
+scikit-learn==1.2.2
+pandas==1.5.3
+matplotlib==3.7.1
+requests==2.28.2
+pydantic==1.10.4
+mlflow==2.3
+cffi==1.14.6
+defusedxml==0.7.1
+lightgbm==3.3.5
+numpy==1.23.5
+psutil==5.9.5
+

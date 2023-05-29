@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pycaret-svc
+  namespace: mlops-puj
+  labels:
+    app: pycaret
+    env: mlops-puj
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector:
+    app: pycaret
+    env: mlops-puj

@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: mlops-puj
+  name: ingress-mlops
+  annotations:
+    alb.ingress.kubernetes.io/group.name: mlops-puj
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip 
+    kubernetes.io/ingress.class: alb
+spec:
+  rules:
+    - host: minio-puj.dev.ri.appgate.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio-svc
+                port:
+                  number: 9001
+    - host: mlflow-puj.dev.ri.appgate.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mlflow-svc
+                port:
+                  number: 5000
+    - host: data-db-mlfow.dev.ri.appgate.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: data-db-mlfow-svc
+                port:
+                  number: 5432     
+    - host: pycaret-puj.dev.ri.appgate.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pycaret-svc
+                port:
+                  number: 8888                   

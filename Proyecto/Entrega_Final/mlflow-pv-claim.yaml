@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mlops-mlflow-pv-claim
+  namespace: mlops-puj
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: aws-efs
+  volumeName: mlops-mlflow-pv-storage
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: dag-airflow-pv-claim
+  namespace: mlops-puj
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: aws-efs
+  volumeName: dag-airflow-pv-storage
+  resources:
+    requests:
+      storage: 1Gi
